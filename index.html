@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>A Little Something For You</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Sacramento&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --name: "Shanku annaya";
+        --wine: #5c1a2b;
+        --wine-deep: #3d0f1c;
+        --cream: #faf3e6;
+        --cream-2: #f3e6d3;
+        --gold: #c8a24a;
+        --gold-soft: #e3c98c;
+        --ink: #3a1620;
+        --blush: #e7b9bd;
+        --shadow: 0 18px 40px rgba(61, 15, 28, 0.25);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      body {
+        font-family: "Cormorant Garamond", serif;
+        background: var(--wine-deep);
+        color: var(--ink);
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+      .display {
+        font-family: "Playfair Display", serif;
+      }
+      .script {
+        font-family: "Sacramento", cursive;
+      }
+
+      #stage {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+      }
+
+      .screen {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 8vh 6vw 4vh;
+        text-align: center;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(14px);
+        transition:
+          opacity 0.55s ease,
+          transform 0.55s ease;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .screen.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      .bg-cream {
+        background:
+          radial-gradient(
+            circle at 15% 8%,
+            rgba(200, 162, 74, 0.18),
+            transparent 45%
+          ),
+          radial-gradient(
+            circle at 85% 92%,
+            rgba(231, 185, 189, 0.28),
+            transparent 50%
+          ),
+          var(--cream);
+      }
+      .bg-wine {
+        background:
+          radial-gradient(
+            circle at 50% 20%,
+            rgba(200, 162, 74, 0.22),
+            transparent 55%
+          ),
+          linear-gradient(180deg, var(--wine) 0%, var(--wine-deep) 100%);
+        color: var(--cream);
+      }
+
+      .eyebrow-script {
+        font-family: "Sacramento", cursive;
+        font-size: 1.7rem;
+        color: var(--wine);
+        margin: 0 0 0.2rem;
+      }
+      .bg-wine .eyebrow-script {
+        color: var(--gold-soft);
+      }
+
+      h1.title {
+        font-family: "Playfair Display", serif;
+        font-weight: 700;
+        font-size: clamp(2rem, 8vw, 2.6rem);
+        line-height: 1.15;
+        margin: 0 0 0.6rem;
+        color: var(--wine);
+      }
+      .bg-wine h1.title {
+        color: var(--cream);
+      }
+
+      .rule {
+        width: 64px;
+        height: 2px;
+        background: var(--gold);
+        margin: 1.1rem auto 1.4rem;
+        border-radius: 2px;
+      }
+
+      p.copy {
+        font-size: 1.28rem;
+        line-height: 1.55;
+        max-width: 34ch;
+        margin: 0 auto;
+      }
+
+      .cake {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 1.6rem;
+      }
+      .flame {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 9px;
+        height: 22px;
+        background: radial-gradient(
+          circle at 50% 30%,
+          #ffe9a8,
+          var(--gold) 70%
+        );
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        transform: translateX(-50%);
+        animation: flicker 1.6s ease-in-out infinite;
+        filter: drop-shadow(0 0 8px rgba(255, 210, 120, 0.8));
+      }
+      @keyframes flicker {
+        0%,
+        100% {
+          transform: translateX(-50%) scale(1) rotate(-1deg);
+        }
+        50% {
+          transform: translateX(-50%) scale(1.08) rotate(2deg);
+        }
+      }
+      .wick {
+        position: absolute;
+        left: 50%;
+        top: 18px;
+        width: 2px;
+        height: 16px;
+        background: #4a3320;
+        transform: translateX(-50%);
+      }
+      .tier {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 6px;
+        box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.08);
+      }
+      .tier1 {
+        top: 32px;
+        width: 46px;
+        height: 34px;
+        background: var(--cream-2);
+        border: 1px solid var(--gold-soft);
+      }
+      .tier2 {
+        top: 64px;
+        width: 80px;
+        height: 38px;
+        background: var(--gold-soft);
+      }
+      .tier3 {
+        top: 100px;
+        width: 118px;
+        height: 44px;
+        background: var(--wine);
+      }
+
+      .btn {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.15rem;
+        letter-spacing: 0.03em;
+        padding: 0.85rem 2.2rem;
+        border-radius: 2px;
+        cursor: pointer;
+        border: 1.5px solid var(--wine);
+        background: var(--wine);
+        color: var(--cream);
+        transition:
+          transform 0.18s ease,
+          background 0.18s ease;
+      }
+      .btn:active {
+        transform: scale(0.96);
+      }
+      .btn.ghost {
+        background: transparent;
+        color: var(--wine);
+      }
+      .bg-wine .btn.ghost {
+        color: var(--cream);
+        border-color: var(--gold-soft);
+      }
+      .bg-wine .btn:not(.ghost) {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: var(--wine-deep);
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.6rem;
+        position: relative;
+      }
+      #noBtn {
+        transition: transform 0.25s ease;
+      }
+
+      .envelope {
+        width: 150px;
+        height: 105px;
+        margin: 0 auto 1.6rem;
+        position: relative;
+        cursor: pointer;
+      }
+      .env-back {
+        position: absolute;
+        inset: 0;
+        background: var(--wine);
+        border-radius: 4px;
+        box-shadow: var(--shadow);
+      }
+      .env-flap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 56%;
+        background: var(--wine-deep);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        transform-origin: top center;
+        transition: transform 0.5s ease;
+        border-radius: 4px 4px 0 0;
+      }
+      .envelope.open .env-flap {
+        transform: rotateX(180deg);
+      }
+      .env-heart {
+        position: absolute;
+        left: 50%;
+        top: 44%;
+        transform: translate(-50%, -50%);
+        font-size: 1.3rem;
+        color: var(--gold-soft);
+        z-index: 2;
+      }
+      .letter-card {
+        background: var(--cream);
+        border: 1px solid var(--gold-soft);
+        border-radius: 4px;
+        padding: 1.6rem 1.5rem;
+        max-width: 340px;
+        box-shadow: var(--shadow);
+        font-style: italic;
+        font-size: 1.24rem;
+        line-height: 1.6;
+        color: var(--ink);
+      }
+
+      .gift-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 340px;
+      }
+      .gift-card {
+        background: var(--cream);
+        border: 1px solid var(--gold-soft);
+        border-radius: 4px;
+        padding: 1.3rem 1rem;
+        box-shadow: var(--shadow);
+      }
+      .gift-icon {
+        font-size: 1.9rem;
+        margin-bottom: 0.4rem;
+      }
+      .gift-card h3 {
+        margin: 0.2rem 0 0.15rem;
+        font-family: "Playfair Display", serif;
+        font-size: 1.2rem;
+        color: var(--wine);
+        font-weight: 600;
+      }
+      .gift-card p {
+        margin: 0;
+        font-size: 1.05rem;
+        color: #7a5560;
+      }
+      .gift-card.clickable {
+        cursor: pointer;
+        transition: transform 0.18s ease;
+      }
+      .gift-card.clickable:active {
+        transform: scale(0.97);
+      }
+      .gift-card.clickable .tap-hint {
+        margin-top: 0.35rem;
+        font-size: 0.85rem;
+        color: var(--gold);
+        font-style: italic;
+      }
+
+      .memories-scroll {
+        width: 100%;
+        max-width: 360px;
+        padding: 0 2px 1rem;
+      }
+      .polaroid {
+        background: #fff;
+        padding: 0.6rem 0.6rem 1.1rem;
+        border-radius: 2px;
+        box-shadow: var(--shadow);
+        margin: 0 auto 1.3rem;
+        max-width: 280px;
+      }
+      .polaroid .frame {
+        width: 100%;
+        aspect-ratio: 4/3;
+        border-radius: 1px;
+        overflow: hidden;
+        background: linear-gradient(135deg, var(--gold-soft), var(--blush));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-family: "Playfair Display", serif;
+        font-size: 0.95rem;
+      }
+      .polaroid img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .polaroid figcaption {
+        font-style: italic;
+        font-size: 1.05rem;
+        margin-top: 0.6rem;
+        color: var(--ink);
+      }
+
+      .final h1 {
+        font-size: clamp(1.9rem, 9vw, 2.5rem);
+      }
+      .heart-line {
+        font-size: 1.6rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .hearts-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+      }
+      .float-heart {
+        position: absolute;
+        bottom: -10%;
+        font-size: 1.1rem;
+        opacity: 0.55;
+        animation: rise linear infinite;
+        color: var(--gold-soft);
+      }
+      .bg-cream .float-heart {
+        color: var(--blush);
+      }
+      @keyframes rise {
+        0% {
+          transform: translateY(0) translateX(0) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.6;
+        }
+        90% {
+          opacity: 0.5;
+        }
+        100% {
+          transform: translateY(-115vh) translateX(var(--drift, 20px))
+            rotate(25deg);
+          opacity: 0;
+        }
+      }
+
+      .dots {
+        position: absolute;
+        top: calc(env(safe-area-inset-top, 0px) + 18px);
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 6px;
+        z-index: 5;
+      }
+      .dots span {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.35);
+      }
+      .bg-cream + .dots span,
+      .screen.bg-cream .dots span {
+        background: rgba(92, 26, 43, 0.25);
+      }
+      .dots span.on {
+        background: var(--gold);
+      }
+
+      .content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto;
+        width: 100%;
+      }
+
+      .confetti {
+        position: absolute;
+        top: -8%;
+        width: 8px;
+        height: 14px;
+        opacity: 0.9;
+        animation: fall linear forwards;
+      }
+      @keyframes fall {
+        to {
+          transform: translateY(115vh) rotate(360deg);
+          opacity: 0.2;
+        }
+      }
+
+      a.credit {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.35);
+        z-index: 5;
+        text-decoration: none;
+      }
+      .bg-cream a.credit {
+        color: rgba(92, 26, 43, 0.35);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .flame,
+        .float-heart,
+        .confetti {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <!-- 1. COVER -->
+      <section class="screen active bg-wine" data-index="0">
+        <div class="dots" id="dots"></div>
+        <div class="hearts-layer" data-hearts="6"></div>
+        <div class="content">
+          <p class="eyebrow-script">a little something for</p>
+          <h1 class="title" id="coverName">Amara</h1>
+          <div class="cake">
+            <div class="flame"></div>
+            <div class="wick"></div>
+            <div class="tier tier1"></div>
+            <div class="tier tier2"></div>
+            <div class="tier tier3"></div>
+          </div>
+          <h1 class="title">Happy Birthday 🎉</h1>
+          <button class="btn" onclick="goTo(1)">Next</button>
+        </div>
+      </section>
+
+      <!-- 2. CONSENT -->
+      <section class="screen bg-cream" data-index="1">
+        <div class="hearts-layer" data-hearts="5"></div>
+        <div class="content">
+          <p class="eyebrow-script">before we continue</p>
+          <h1 class="title">Please Accept<br />My Gift ❤️</h1>
+          <div class="rule"></div>
+          <div class="btn-row">
+            <button class="btn" onclick="goTo(2)">Yes</button>
+            <button
+              class="btn ghost"
+              id="noBtn"
+              onmouseover="dodge()"
+              ontouchstart="dodge()"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. LETTER -->
+      <section class="screen bg-wine" data-index="2">
+        <div class="hearts-layer" data-hearts="4"></div>
+        <div class="content">
+          <p class="eyebrow-script">a letter for you</p>
+          <div class="envelope" id="envelope" onclick="openEnvelope()">
+            <div class="env-heart">💌</div>
+            <div class="env-back"></div>
+            <div class="env-flap"></div>
+          </div>
+          <div class="letter-card" id="letterCard" style="display: none">
+            It's your 22 nd bday right? , and time is 11.45 PM , Happy birthday
+            to my dear annaya . You may feel surprise with this or not , but I'm
+            very excited to see you. Sooo please come fast to clg and meet me
+            and tie the Raakhi by me . Okay naa 🤍
+          </div>
+          <button class="btn" style="margin-top: 1.6rem" onclick="goTo(3)">
+            Continue
+          </button>
+        </div>
+      </section>
+
+      <!-- 4. THREE GIFTS -->
+      <section class="screen bg-cream" data-index="3">
+        <div class="hearts-layer" data-hearts="5"></div>
+        <div class="content">
+          <p class="eyebrow-script">for you, always</p>
+          <h1 class="title">Three Little Gifts</h1>
+          <div class="rule"></div>
+          <div class="gift-grid">
+            <div class="gift-card clickable" onclick="goTo(4)">
+              <div class="gift-icon">💌</div>
+              <h3>A Letter</h3>
+              <p>Words from the heart</p>
+              <p class="tap-hint">tap to open →</p>
+            </div>
+            <div class="gift-card clickable" onclick="goTo(5)">
+              <div class="gift-icon">🌷</div>
+              <h3>Fights</h3>
+              <p>A bunch of dialogues , just for you</p>
+              <p class="tap-hint">tap to open →</p>
+            </div>
+            <div class="gift-card clickable" onclick="goTo(6)">
+              <div class="gift-icon">🎁</div>
+              <h3>A Surprise</h3>
+              <p>Tied with gold ribbon</p>
+              <p class="tap-hint">tap to open →</p>
+            </div>
+          </div>
+          <button class="btn" style="margin-top: 1.6rem" onclick="goTo(7)">
+            See Our Memories
+          </button>
+        </div>
+      </section>
+
+      <!-- 5. LETTER MEMORIES -->
+      <section class="screen bg-cream" data-index="4">
+        <div class="hearts-layer" data-hearts="3"></div>
+        <div class="content" style="width: 100%">
+          <p class="eyebrow-script">a letter, remembered</p>
+          <h1 class="title">A Letter &amp; Its Memories</h1>
+          <div class="rule"></div>
+          <div class="memories-scroll">
+            <div class="letter-card" style="margin: 0 auto 1.3rem">
+              My all time fav person idhi niku thelsu , theliyaka pothey ippudu
+              thelusuko sareyyyy naaaaa. Okkosari chala prema chupisthav annaya
+              malli emaithadho emo kani normal ipothav , kani eppudu naathone
+              untav and enni godavalu ayina sare , next minute ey matladukuntam
+              , nikoti thelsa godava padithene vaalla bond strong and
+              nijamainadhi anta , Inka Malli speacial ga niku cheppedhi em ledhu anni
+              cheppesa anni thelsu niku ,
+              kaani ni gurinchi naaku entha thelisina na gurinchi niku entha
+              thelisina godavalu matram aagavu avi vasthune untayi raaka pothey
+              ne problem .Anyway be careful with me , endhukante nenu ni chelli ni
+              aa place evarikaina ichavo sachave na chethilo , niku sontha
+              chelli unte I don't mind but this is my time
+              ...................... 🤍
+            </div>
+            <figure class="polaroid">
+              <div class="frame"><img src="rakhi.jpg.jpg" alt="Rakhi" /></div>
+              <figcaption>
+                "Every word here, I meant with my whole heart."
+              </figcaption>
+            </figure>
+            <figure class="polaroid">
+              <div class="frame"><img src="chair.jpg.jpg" alt="Group Photo"></img></div>
+              <figcaption>
+                "My strength"
+              </figcaption>
+            </figure>
+          </div>
+          <button
+            class="btn ghost"
+            style="margin-top: 0.6rem"
+            onclick="goTo(3)"
+          >
+            Back to Gifts
+          </button>
+        </div>
+      </section>
+
+      <!-- 6. FRESH ROSES MEMORIES -->
+      <section class="screen bg-cream" data-index="5">
+        <div class="hearts-layer" data-hearts="3"></div>
+        <div class="content" style="width: 100%">
+          <p class="eyebrow-script">a bunch of dialogues, just for you</p>
+          <h1 class="title">Fights &amp; Their Memories</h1>
+          <div class="rule"></div>
+          <div class="memories-scroll">
+            <div class="letter-card" style="margin: 0 auto 1.3rem">
+              First godava aa laptop lo windows ekkinchamani niku ichhina  roju vachindhi ,adhi naaku baag agurthu endhuku ente
+              aa tharvatha nuvvu naaku enni sarlu call chesavoo antha brathimiladavooo.......,osey bangaram kavali cheyaledhee sorry ey ani ,
+              malli anthala phone etha nantha laa eppudo ayyindhi godava aaroju kuda alane chesaaa , but adhi endhuku ayyindho gurthuledhu , kaaani nuv brathimilaadu thunte baguntadhi ,
+              nuvvu just osey bangaram ala kaadhe ante chaaaluuuu ice ipothaaa , inka tharvatha chesevi antha acting ......hehheeeee 
+              malli pedha godava ayyindhi nuv clg ki vachi vellaka , em avthundho naake theliyaledhu , endhuku ala thikka thikka ga chesano naake thelidhu ,
+              kaani manam godava padinaaa waste nenu malli chesthe ani niku thelsu , andhuke niku baaa saaguthundhi alaaaaaa..........
+              kindha photos ki paina matter sambandham undadhu le
+            </div>
+            <figure class="polaroid">
+              <div class="frame"><img src="pose.jpg.jpg" alt="pose"></img></div>
+              <figcaption>
+                Bale unnav annaya , cuite gaaa....
+              </figcaption>
+            </figure>
+            
+            <figure class="polaroid">
+              <div class="frame"><img src="new.jpg.jpg" alt="College"></img></div>
+              <figcaption>
+                Nakante thaadila unnav pehhh...... "
+              </figcaption>
+            </figure>
+          </div>
+          <button
+            class="btn ghost"
+            style="margin-top: 0.6rem"
+            onclick="goTo(3)"
+          >
+            Back to Gifts
+          </button>
+        </div>
+      </section>
+
+      <!-- 7. A SURPRISE MEMORIES -->
+      <section class="screen bg-cream" data-index="6">
+        <div class="hearts-layer" data-hearts="3"></div>
+        <div class="content" style="width: 100%">
+          <p class="eyebrow-script">tied with gold ribbon</p>
+          <h1 class="title">A Surprise &amp; Its Memories</h1>
+          <div class="rule"></div>
+          <div class="memories-scroll">
+            <div class="letter-card" style="margin: 0 auto 1.3rem">
+              Nenu eppudu niku surprise ivvaledhu le kaani , I'm just feeling that idhi nuv surprise feel ayyela chesthadhi emo
+              ani anukuntunna , naaku already thought undhi chedham ani website but nuv naku em cheppa "enti ippudu nuv aa time ki chepthey
+              nenu surpirse feel avthaa ani anukuntunnava ani annav ga ippudu ela avvakunda untava nenu chustha ...., ante confirm ga avvu ani nenu cheppatledhu le"
+              nenu niku ivvaledhu le surprise kaani nuv ichav bangles thiskochiii...... , avi nijam ga baa nachesayi , 
+              thanks for that shankuu annayaaaaa..........
+            </div>
+            <figure class="polaroid">
+              <div class="frame"><img src="hand.jpg.jpg" alt="Surprise"></img></div>
+              <figcaption>
+                "One of my fav photo of you , Where I fall for "
+              </figcaption>
+            </figure>
+            <figure class="polaroid">
+              <div class="frame"><img src="bangles.jpg.jpg" alt="ntg"></img></div>
+              <figcaption>
+                "Chaaalaaaaa ante chaaalaaa bagunnayi"
+              </figcaption>
+            </figure>
+          </div>
+          <button
+            class="btn ghost"
+            style="margin-top: 0.6rem"
+            onclick="goTo(3)"
+          >
+            Back to Gifts
+          </button>
+        </div>
+      </section>
+
+      <!-- 8. MEMORIES -->
+      <section class="screen bg-cream" data-index="7">
+        <div class="hearts-layer" data-hearts="3"></div>
+        <div class="content" style="width: 100%">
+          <p class="eyebrow-script">a few favorite moments</p>
+          <h1 class="title">Our Memories</h1>
+          <div class="rule"></div>
+          <div class="memories-scroll">
+             <figure class="polaroid">
+              <div class="frame">
+                <video
+                  src="sanp.mp4.mp4"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  style="width: 100%; object-fit: cover"
+                ></video>
+              </div>
+              <figcaption>
+                "Koothulu"
+              </figcaption>
+            </figure>
+            <figure class="polaroid">
+              <div class="frame"><video src="raakhi.mp4.mp4" autoplay muted loop playsinline style="width: 100%; object-fit: cover;"></video></div>
+              <figcaption>
+                "Ento pose koduthunnadu kaallu mokkali anta"
+              </figcaption>
+            </figure>
+            <figure class="polaroid">
+              <div class="frame"><img src="green_dress.jpg.jpg" alt="Green Dress"></img></div>
+              <figcaption>
+                "My strength and shield."
+              </figcaption>
+            </figure>
+            <figure class="polaroid">
+              <div class="frame"><video src="face_snap.mp4.mp4" autoplay muted loop playsinline style="width: 100%; object-fit: cover;"></video></div>
+              <figcaption>
+                "Gundu boosssss.........."
+              </figcaption>
+            </figure>
+          </div>
+          <button class="btn" style="margin-top: 0.6rem" onclick="goTo(8)">
+            Continue
+          </button>
+        </div>
+      </section>
+
+      <!-- 9. FINAL -->
+      <section class="screen bg-wine final" data-index="8">
+        <div class="hearts-layer" data-hearts="8"></div>
+        <div id="confettiLayer"></div>
+        <div class="content">
+          <p class="heart-line">❤️ Miss you Annayaa ❤️</p>
+          <h1 class="title">Once again , Happy Birthday,<br />Annayaaaa🎂</h1>
+          <p class="copy" style="margin-top: 1rem">
+            Forever grateful that you are in my life.
+          </p>
+          <button
+            class="btn ghost"
+            style="margin-top: 1.8rem"
+            onclick="replaySite()"
+          >
+            Replay ↺
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      document.getElementById("coverName").textContent = "Shanku annaya";
+
+      const screens = Array.from(document.querySelectorAll(".screen"));
+      const dotsWrap = document.getElementById("dots");
+      screens.forEach((_, i) => {
+        const d = document.createElement("span");
+        if (i === 0) d.className = "on";
+        dotsWrap.appendChild(d);
+      });
+
+      function goTo(i) {
+        screens.forEach((s) => s.classList.remove("active"));
+        screens[i].classList.add("active");
+        Array.from(dotsWrap.children).forEach((d, idx) =>
+          d.classList.toggle("on", idx === i),
+        );
+        if (i === 8) launchConfetti();
+      }
+
+      function openEnvelope() {
+        const env = document.getElementById("envelope");
+        env.classList.add("open");
+        setTimeout(() => {
+          document.getElementById("letterCard").style.display = "block";
+        }, 350);
+      }
+
+      function dodge() {
+        const btn = document.getElementById("noBtn");
+        const x = (Math.random() - 0.5) * 140;
+        const y = (Math.random() - 0.5) * 60;
+        btn.style.transform = `translate(${x}px, ${y}px)`;
+      }
+
+      document.querySelectorAll(".hearts-layer").forEach((layer) => {
+        const n = parseInt(layer.dataset.hearts || 4, 10);
+        for (let i = 0; i < n; i++) {
+          const h = document.createElement("span");
+          h.className = "float-heart";
+          h.textContent = ["♥", "❤", "♡"][Math.floor(Math.random() * 3)];
+          h.style.left = Math.random() * 90 + 3 + "%";
+          h.style.setProperty("--drift", Math.random() * 60 - 30 + "px");
+          h.style.animationDuration = 7 + Math.random() * 6 + "s";
+          h.style.animationDelay = Math.random() * 6 + "s";
+          h.style.fontSize = 0.8 + Math.random() * 1 + "rem";
+          layer.appendChild(h);
+        }
+      });
+
+      function launchConfetti() {
+        const layer = document.getElementById("confettiLayer");
+        if (layer.dataset.done) return;
+        layer.dataset.done = "1";
+        const colors = ["#c8a24a", "#e3c98c", "#e7b9bd", "#faf3e6"];
+        for (let i = 0; i < 40; i++) {
+          const c = document.createElement("div");
+          c.className = "confetti";
+          c.style.left = Math.random() * 100 + "%";
+          c.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
+          c.style.animationDuration = 2.4 + Math.random() * 2 + "s";
+          c.style.animationDelay = Math.random() * 1.4 + "s";
+          layer.appendChild(c);
+        }
+      }
+
+      function replaySite() {
+        const env = document.getElementById("envelope");
+        env.classList.remove("open");
+        document.getElementById("letterCard").style.display = "none";
+
+        const noBtn = document.getElementById("noBtn");
+        noBtn.style.transform = "";
+
+        const layer = document.getElementById("confettiLayer");
+        layer.innerHTML = "";
+        delete layer.dataset.done;
+
+        goTo(0);
+      }
+
+      let touchStartY = null;
+      document.getElementById("stage").addEventListener("touchstart", (e) => {
+        touchStartY = e.touches[0].clientY;
+      });
+      document.getElementById("stage").addEventListener("touchend", (e) => {
+        if (touchStartY === null) return;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        touchStartY = null;
+      });
+    </script>
+  </body>
+</html>
